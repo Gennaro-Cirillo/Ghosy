@@ -47,7 +47,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        CARATTERIZZAZIONE DELLE SPRITE
         
 //        personaggio(aka fantasmino)
-        backgroundCreation()
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
@@ -85,7 +84,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(personaggio)
         addChild(terreno)
-        addChild(pilastro1)
         addChild(sky)
         self.scene?.physicsWorld.contactDelegate = self
     }
@@ -94,7 +92,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        moveBackground()
 
     }
     
@@ -110,7 +107,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ostacoloAlto()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+6, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
             self.ChiamataOstacoli()
         })
         
