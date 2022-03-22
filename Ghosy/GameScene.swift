@@ -19,23 +19,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var cont: Int = 0
     
+    var lastSpawnTime2:Date?
+    var lastSpawnTime:Date?
+    
     
 //    DICHIARAZIONI SPRITE
     
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
-    let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
     
     
     
     override func didMove(to view: SKView) {
         
+        backgroundColor = SKColor.white
+        
+//        ANIMAZIONE PERSONAGGIO
+        
+        personaggio.run(SKAction.repeatForever(SKAction.animate(with: [SKTexture(imageNamed: "walkFrame1") , SKTexture(imageNamed:"walkFrame2")], timePerFrame: 0.25)))
+
+
+        
+        ChiamataOstacoli()
+        
 //        CARATTERIZZAZIONE DELLE SPRITE
         
 //        personaggio(aka fantasmino)
         
-        personaggio.position = CGPoint(x:400 , y:90)
+        personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
         personaggio.xScale = 0.1
         personaggio.yScale = 0.1
@@ -60,27 +72,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         terreno.physicsBody?.isDynamic = false
         terreno.physicsBody?.categoryBitMask = PhysicsCategories.pavimento
         terreno.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+    
         
         
-        
-//      pilastri(aka ostacoli)
-        
-        pilastro1.position = CGPoint(x:700 , y:100)
-        pilastro1.xScale = 0.1
-        pilastro1.yScale = 0.1
-        
-        
-        backgroundColor = SKColor.white
         
        
 //        ADDCHILD
         
         addChild(personaggio)
         addChild(terreno)
-        addChild(pilastro1)
+        
+        
         
         self.scene?.physicsWorld.contactDelegate = self
     }
+    
     
     
     override func update(_ currentTime: TimeInterval) {
@@ -88,7 +94,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     
+    func ChiamataOstacoli(){
+        
+        var scelta: Int = Int.random(in: 1..<3)
+        
+        if(scelta==1){
+            ostacoloMedio()
+        }
+        if(scelta==2){
+            ostacoloAlto()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+6, execute: {
+            self.ChiamataOstacoli()
+        })
+        
+    }
+    
+    
+    
 //    FUNZIONE DI SALTO
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
             return
@@ -98,6 +124,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 cont += 1
        }
     }
+
+    
+    
+//    FUNZIONE DI COLLISIONE
     
     func didBegin(_ contact: SKPhysicsContact) {
         
@@ -117,4 +147,77 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    
+//    GENERATORI DI OSTACOLI
+    
+    func ostacoloMedio(){
+        
+        let wait2 = SKAction.wait(forDuration: 2, withRange: 1)
+
+                let block2 = SKAction.run {[unowned self] in
+                    //Debug
+                    let now2 = Date()
+
+                    if let lastSpawnTime2 = self.lastSpawnTime {
+
+                        let elapsed2 = now2.timeIntervalSince(lastSpawnTime2)
+
+                        print("Sprite spawned after : \(elapsed2)")
+                    }
+                    self.lastSpawnTime = now2
+                    //End Debug
+
+                    let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
+                    pilastro1.position = CGPoint(x:1000 , y:100)
+                    pilastro1.xScale = 0.07
+                    pilastro1.yScale = 0.1
+                    pilastro1.run(SKAction.moveTo(x: -40, duration: 5))
+                    
+                    
+                    self.addChild(pilastro1)
+                }
+
+                let sequence2 = SKAction.sequence([block2, wait2])
+                let loop2 = SKAction.repeat(sequence2, count: 1)
+
+                run(loop2, withKey: "bKey")
+        
+    }
+   
+    
+    
+    
+    func ostacoloAlto(){
+        
+        let wait = SKAction.wait(forDuration: 2, withRange: 1)
+
+                let block = SKAction.run {[unowned self] in
+                    //Debug
+                    let now = Date()
+
+                    if let lastSpawnTime = self.lastSpawnTime {
+
+                        let elapsed = now.timeIntervalSince(lastSpawnTime)
+
+                        print("Sprite spawned after : \(elapsed)")
+                    }
+                    self.lastSpawnTime = now
+                    //End Debug
+                    
+                    let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
+                    pilastro2.position = CGPoint(x:1000 , y:75)
+                    pilastro2.xScale = 0.07
+                    pilastro2.yScale = 0.1
+                    pilastro2.run(SKAction.moveTo(x: -40, duration: 5))
+                    
+                    self.addChild(pilastro2)
+                }
+
+                let sequence = SKAction.sequence([block, wait])
+                let loop = SKAction.repeat(sequence, count: 1)
+
+                run(loop, withKey: "aKey")
+ 
+    }
+
 }
