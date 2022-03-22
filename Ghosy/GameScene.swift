@@ -8,81 +8,113 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+struct PhysicsCategories {
+    static let fantasmino : UInt32 = 0x1 << 0
+    static let pavimento : UInt32 = 0x1 << 1
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
+
+//    VARIABILI UTILI
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    var cont: Int = 0
+    
+    
+//    DICHIARAZIONI SPRITE
+    
+    
+    let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
+    let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
+    let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
+    
+    
     
     override func didMove(to view: SKView) {
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
+//        CARATTERIZZAZIONE DELLE SPRITE
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+//        personaggio(aka fantasmino)
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-    }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
+        personaggio.position = CGPoint(x:400 , y:90)
+        personaggio.name = "fantasmino"
+        personaggio.xScale = 0.1
+        personaggio.yScale = 0.1
+        personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
+        personaggio.physicsBody?.restitution = 0
+        personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
+        personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+        
+        
+//      terreno(aka pavimento)
+        
+        terreno.position = CGPoint(x: size.width*0.5 ,y: 0)
+        terreno.xScale = 2
+        terreno.yScale = 0.7
+        terreno.name = "pavimento"
+        terreno.physicsBody = SKPhysicsBody(texture: terreno.texture!, size: terreno.size)
+//        terreno.physicsBody = SKPhysicsBody(rectangleOf: CGSize (width: UIScreen.main.bounds.size.width , height: 100))
+        terreno.physicsBody?.affectedByGravity = false
+        terreno.physicsBody?.allowsRotation = false
+        terreno.physicsBody?.restitution = 0
+        terreno.physicsBody?.isDynamic = false
+        terreno.physicsBody?.categoryBitMask = PhysicsCategories.pavimento
+        terreno.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+        
+        
+        
+//      pilastri(aka ostacoli)
+        
+        pilastro1.position = CGPoint(x:700 , y:100)
+        pilastro1.xScale = 0.1
+        pilastro1.yScale = 0.1
+        
+        
+        backgroundColor = SKColor.white
+        
+       
+//        ADDCHILD
+        
+        addChild(personaggio)
+        addChild(terreno)
+        addChild(pilastro1)
+        
+        self.scene?.physicsWorld.contactDelegate = self
     }
     
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
     }
+    
+    
+//    FUNZIONE DI SALTO
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else {
+            return
+        }
+            if(cont <= 1){
+                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                cont += 1
+       }
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        let contactA = contact.bodyA.node?.name
+        let contactB = contact.bodyB.node?.name
+        
+        if(contactA == "fantasmino" || contactB == "fantasmino"){
+                    
+            if(contactA == "pavimento" || contactB == "pavimento"){
+                
+                    cont = 0
+                
+//                    personaggio.position = CGPoint(x: personaggio.position.x - 10, y: personaggio.position.y)
+//                    personaggio.physicsBody?.applyImpulse(CGVector(dx: -10, dy: 0))
+                
+            }
+        }
+    }
+    
 }
