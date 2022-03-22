@@ -15,10 +15,7 @@ class GameViewController: UIViewController {
         
         super.viewDidLoad()
         
-//        let scene = Prologue(size: CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         let scene = GameScene(size: CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-//        let scene = Level00(size: CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-//        let scene = TheEnd(size: CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
         let skView = self.view as! SKView
         skView.showsFPS = false
         skView.showsNodeCount = false

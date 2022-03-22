@@ -28,7 +28,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
-    
+    let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
+    let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     
     
     override func didMove(to view: SKView) {
@@ -46,6 +47,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        CARATTERIZZAZIONE DELLE SPRITE
         
 //        personaggio(aka fantasmino)
+        backgroundCreation()
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
@@ -56,8 +58,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
         personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
         
-        
-        
+        sky.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
+        sky.zPosition = -2
+        sky.xScale = frame.width * 0.1
+        sky.yScale =  0.5
 //      terreno(aka pavimento)
         
         terreno.position = CGPoint(x: size.width*0.5 ,y: 0)
@@ -81,9 +85,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(personaggio)
         addChild(terreno)
-        
-        
-        
+        addChild(pilastro1)
+        addChild(sky)
         self.scene?.physicsWorld.contactDelegate = self
     }
     
@@ -91,6 +94,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        moveBackground()
+
     }
     
     
