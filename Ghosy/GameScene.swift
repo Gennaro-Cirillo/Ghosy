@@ -59,8 +59,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         sky.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
         sky.zPosition = -2
-        sky.xScale = frame.width * 0.1
-        sky.yScale =  0.5
+        sky.xScale = size.width
+        sky.yScale = size.width * 0.002
 //      terreno(aka pavimento)
         
         terreno.position = CGPoint(x: size.width*0.5 ,y: 0)
