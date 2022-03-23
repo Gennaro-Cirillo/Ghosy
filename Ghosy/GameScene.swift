@@ -206,8 +206,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                     let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
                     pilastro1.position = CGPoint(x:1000 , y:90)
-                    pilastro1.xScale = 0.03
-                    pilastro1.yScale = 0.04
+                    pilastro1.xScale = 2
+                    pilastro1.yScale = 2
                     pilastro1.name = "ostacoloAlto"
                     pilastro1.zPosition = 8
                     
@@ -253,8 +253,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
                     pilastro2.position = CGPoint(x:1000 , y:65)
-                    pilastro2.xScale = 0.05
-                    pilastro2.yScale = 0.06
+                    pilastro2.xScale = 2
+                    pilastro2.yScale = 3
                     pilastro2.name = "ostacoloBasso"
                     pilastro2.zPosition = 8
                     pilastro2.run(SKAction.moveTo(x: -40, duration: 5))
