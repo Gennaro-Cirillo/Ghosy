@@ -49,6 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sky.zPosition = -2
         sky.xScale = size.width
         sky.yScale = size.width * 0.002
+        sky.alpha = 1
 //      terreno(aka pavimento)
         
 
