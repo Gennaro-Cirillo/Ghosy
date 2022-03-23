@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "walkingFrame1_x1.png",
+      "filename" : "walkFrame1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "walkFrame1_x2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "walkFrame1_x3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
