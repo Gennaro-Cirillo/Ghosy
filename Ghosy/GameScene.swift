@@ -55,8 +55,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
-        personaggio.xScale = 0.1
-        personaggio.yScale = 0.1
+        personaggio.xScale = size.width * 0.00015
+        personaggio.yScale = size.height * 0.00025
         personaggio.zPosition = 9
         personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
         personaggio.physicsBody?.restitution = 0
@@ -71,8 +71,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //      terreno(aka pavimento)
         
         terreno.position = CGPoint(x: size.width*0.5 ,y: 0)
-        terreno.xScale = 2
-        terreno.yScale = 0.7
+        terreno.xScale = size.width * 0.01
+        terreno.yScale = size.height * 0.0026
         terreno.name = "pavimento"
         terreno.zPosition = 9
         terreno.physicsBody = SKPhysicsBody(texture: terreno.texture!, size: terreno.size)
@@ -126,7 +126,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ostacoloAlto()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
             self.ChiamataOstacoli()
         })
         
@@ -141,7 +141,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
             if(cont <= 1){
-                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 55))
+                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 90))
                 cont += 1
        }
     }
@@ -187,7 +187,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
 //    GENERATORI DI OSTACOLI
     
-    func ostacoloMedio(){
+    func ostacoloAlto(){
         
         let wait2 = SKAction.wait(forDuration: 2, withRange: 1)
 
@@ -206,8 +206,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                     let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
                     pilastro1.position = CGPoint(x:1000 , y:80)
-                    pilastro1.xScale = frame.size.width * 0.006
-                    pilastro1.yScale = frame.size.height * 0.009
+                    pilastro1.xScale = frame.size.width * 0.0065
+                    pilastro1.yScale = frame.size.height * 0.01
                     pilastro1.name = "ostacoloAlto"
                     pilastro1.zPosition = 8
                     
@@ -234,7 +234,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     
-    func ostacoloAlto(){
+    func ostacoloMedio(){
         
         let wait = SKAction.wait(forDuration: 2, withRange: 1)
 
@@ -253,7 +253,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
                     pilastro2.position = CGPoint(x:1000 , y:65)
-                    pilastro2.xScale = frame.size.width * 0.006
+                    pilastro2.xScale = frame.size.width * 0.0065
                     pilastro2.yScale = frame.size.height * 0.009
                     pilastro2.name = "ostacoloBasso"
                     pilastro2.zPosition = 8
@@ -313,7 +313,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 for i in 0 ... 3 {
                     let esteticaTerreno = SKSpriteNode(texture: terrenoTexture)
                     esteticaTerreno.xScale = size.width * 0.00135
-                    esteticaTerreno.yScale = size.height * 0.002
+                    esteticaTerreno.yScale = size.height * 0.005
                     esteticaTerreno.zPosition = 10
                     esteticaTerreno.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: 30)
                     esteticaTerreno.name = "estetica"
@@ -324,10 +324,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func moveFloor(){
         self.enumerateChildNodes(withName: "estetica", using: ({
             (node, error) in
-            node.position.x -= 1
+            node.position.x -= 2
             
             if node.position.x < -((self.scene?.size.width)!){
-                node.position.x += (self.scene?.size.width)! * 2.8
+                node.position.x += (self.scene?.size.width)! * 2.4
             }
         }))
     }
