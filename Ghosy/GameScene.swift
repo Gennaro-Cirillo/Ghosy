@@ -56,6 +56,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         personaggio.name = "fantasmino"
         personaggio.xScale = 0.1
         personaggio.yScale = 0.1
+        personaggio.zPosition = 9
         personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
         personaggio.physicsBody?.restitution = 0
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
@@ -68,6 +69,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         terreno.xScale = 2
         terreno.yScale = 0.7
         terreno.name = "pavimento"
+        terreno.zPosition = 9
         terreno.physicsBody = SKPhysicsBody(texture: terreno.texture!, size: terreno.size)
 //        terreno.physicsBody = SKPhysicsBody(rectangleOf: CGSize (width: UIScreen.main.bounds.size.width , height: 100))
         terreno.physicsBody?.affectedByGravity = false
@@ -83,7 +85,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         esteticaTerreno.zPosition = 10
         
         sky.position = CGPoint(x: size.width*0.5, y: size.height*0.5)
-    
+        sky.xScale = 1.8
+        sky.yScale = 1.8
+        sky.zPosition = 1
+        sky.zRotation = 3.14
         
         
         
@@ -101,6 +106,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func update(_ currentTime: TimeInterval) {
+        
+        moveBackground()
 
     }
     
@@ -199,6 +206,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pilastro1.xScale = 0.03
                     pilastro1.yScale = 0.04
                     pilastro1.name = "ostacoloAlto"
+                    pilastro1.zPosition = 8
                     
                     pilastro1.physicsBody = SKPhysicsBody(texture: pilastro1.texture!, size: pilastro1.size)
                     pilastro1.physicsBody?.affectedByGravity = true
@@ -245,6 +253,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pilastro2.xScale = 0.05
                     pilastro2.yScale = 0.06
                     pilastro2.name = "ostacoloBasso"
+                    pilastro2.zPosition = 8
                     pilastro2.run(SKAction.moveTo(x: -40, duration: 5))
                     
                     pilastro2.physicsBody = SKPhysicsBody(texture: pilastro2.texture!, size: pilastro2.size)
@@ -264,7 +273,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
  
     }
     
-
+    func moveBackground(){
+        self.enumerateChildNodes(withName: "background1", using: ({
+            (node, error) in
+            node.position.x -= 1
+            
+            if node.position.x < -((self.scene?.size.width)!){
+                node.position.x += (self.scene?.size.width)! * 2.8
+            }
+        }))
+    }
+    
+    
         
     
 
