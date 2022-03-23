@@ -51,6 +51,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        CARATTERIZZAZIONE DELLE SPRITE
         
 //        personaggio(aka fantasmino)
+        backgroundCreation()
+        groundCreation()
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
