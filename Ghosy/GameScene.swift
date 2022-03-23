@@ -30,7 +30,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
-    let esteticaTerreno : SKSpriteNode = SKSpriteNode(imageNamed: "base2")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     
     
@@ -45,6 +44,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         
         ChiamataOstacoli()
+        backgroundCreation()
+        floorCreation()
         
 
         
@@ -71,6 +72,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         terreno.name = "pavimento"
         terreno.zPosition = 9
         terreno.physicsBody = SKPhysicsBody(texture: terreno.texture!, size: terreno.size)
+        terreno.alpha = 0
 //        terreno.physicsBody = SKPhysicsBody(rectangleOf: CGSize (width: UIScreen.main.bounds.size.width , height: 100))
         terreno.physicsBody?.affectedByGravity = false
         terreno.physicsBody?.allowsRotation = false
@@ -79,10 +81,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         terreno.physicsBody?.categoryBitMask = PhysicsCategories.pavimento
         terreno.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
         
-        esteticaTerreno.position = CGPoint(x: size.width*0.5 ,y: 30)
-        esteticaTerreno.xScale = 2
-        esteticaTerreno.yScale = 1
-        esteticaTerreno.zPosition = 10
+    
         
         sky.position = CGPoint(x: size.width*0.5, y: size.height*0.5)
         sky.xScale = 1.8
@@ -97,7 +96,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(personaggio)
         addChild(terreno)
-        addChild(esteticaTerreno)
         addChild(sky)
         
         self.scene?.physicsWorld.contactDelegate = self
@@ -108,6 +106,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         
         moveBackground()
+        moveFloor()
 
     }
     
@@ -273,6 +272,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
  
     }
     
+    
+    
     func moveBackground(){
         self.enumerateChildNodes(withName: "background1", using: ({
             (node, error) in
@@ -284,9 +285,48 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }))
     }
     
+    func backgroundCreation(){
+            let backgroundTexture1 = SKTexture(imageNamed: "background1")
+           
+                    
+                for i in 0 ... 3 {
+                    let background1_1 = SKSpriteNode(texture: backgroundTexture1)
+                    background1_1.zPosition = 8
+                    background1_1.xScale = size.width * 0.00135
+                    background1_1.yScale = size.width * 0.00135
+                    background1_1.alpha = 0.7
+                    background1_1.anchorPoint = CGPoint.zero
+                    background1_1.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: self.frame.size.height * 0.23)
+                    background1_1.name = "background1"
+                    self.addChild(background1_1)
+                }
+        }
+
+    func floorCreation(){
+            let terrenoTexture = SKTexture(imageNamed: "base2")
+           
+                    
+                for i in 0 ... 3 {
+                    let esteticaTerreno = SKSpriteNode(texture: terrenoTexture)
+                    esteticaTerreno.xScale = size.width * 0.00135
+                    esteticaTerreno.yScale = size.height * 0.002
+                    esteticaTerreno.zPosition = 10
+                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: 30)
+                    esteticaTerreno.name = "estetica"
+                    self.addChild(esteticaTerreno)
+                }
+        }
     
-        
-    
+    func moveFloor(){
+        self.enumerateChildNodes(withName: "estetica", using: ({
+            (node, error) in
+            node.position.x -= 1
+            
+            if node.position.x < -((self.scene?.size.width)!){
+                node.position.x += (self.scene?.size.width)! * 2.8
+            }
+        }))
+    }
 
 }
 
