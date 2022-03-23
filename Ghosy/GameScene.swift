@@ -30,6 +30,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
+    let esteticaTerreno : SKSpriteNode = SKSpriteNode(imageNamed: "base2")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     
     
@@ -45,8 +46,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         ChiamataOstacoli()
         
-        backgroundCreation()
-        moveBackground()
+
         
 //        CARATTERIZZAZIONE DELLE SPRITE
         
@@ -61,10 +61,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
         personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
         
-        sky.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
-        sky.zPosition = -2
-        sky.xScale = size.width
-        sky.yScale = size.width * 0.002
+        
 //      terreno(aka pavimento)
         
         terreno.position = CGPoint(x: size.width*0.5 ,y: 0)
@@ -79,6 +76,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         terreno.physicsBody?.isDynamic = false
         terreno.physicsBody?.categoryBitMask = PhysicsCategories.pavimento
         terreno.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+        
+        esteticaTerreno.position = CGPoint(x: size.width*0.5 ,y: 30)
+        esteticaTerreno.xScale = 2
+        esteticaTerreno.yScale = 1
+        esteticaTerreno.zPosition = 10
+        
+        sky.position = CGPoint(x: size.width*0.5, y: size.height*0.5)
     
         
         
@@ -88,7 +92,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(personaggio)
         addChild(terreno)
+        addChild(esteticaTerreno)
         addChild(sky)
+        
         self.scene?.physicsWorld.contactDelegate = self
     }
     
@@ -96,7 +102,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
 
-        moveBackground()
     }
     
     
@@ -126,7 +131,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
             if(cont <= 1){
-                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 55))
                 cont += 1
        }
     }
@@ -191,8 +196,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                     let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
                     pilastro1.position = CGPoint(x:1000 , y:90)
-                    pilastro1.xScale = 0.05
-                    pilastro1.yScale = 0.06
+                    pilastro1.xScale = 0.03
+                    pilastro1.yScale = 0.04
                     pilastro1.name = "ostacoloAlto"
                     
                     pilastro1.physicsBody = SKPhysicsBody(texture: pilastro1.texture!, size: pilastro1.size)
@@ -259,53 +264,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
  
     }
     
-    func backgroundCreation(){
-            let backgroundTexture1 = SKTexture(imageNamed: "background1")
-            let backgroundTexture2 = SKTexture(imageNamed: "background2")
-                    
-                for i in 0 ... 3 {
-                    let background1_1 = SKSpriteNode(texture: backgroundTexture1)
-                    background1_1.zPosition = -1
-                    background1_1.xScale = 1.2
-                    background1_1.yScale = 1.2
-                    background1_1.anchorPoint = CGPoint.zero
-                    background1_1.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: self.frame.size.height * 0.1)
-                    background1_1.name = "background1"
-                    self.addChild(background1_1)
 
-                    for i in 4...4{
-                        let background1_2 = SKSpriteNode(texture: backgroundTexture2)
-                        background1_2.zPosition = -1
-                        background1_2.xScale = 1.2
-                        background1_2.yScale = 1.2
-                        background1_2.anchorPoint = CGPoint.zero
-                        background1_2.name = "background2"
-                        background1_2.position = CGPoint(x: ((self.frame.size.width) * 0.69  * CGFloat(i)), y: self.frame.size.height * 0.1 )
-                        self.addChild(background1_2)
-                    }
-                }
-        }
         
-        func moveBackground(){
-            self.enumerateChildNodes(withName: "background1", using: ({
-                (node, error) in
-                node.position.x -= 2
-                
-                if node.position.x < -((self.scene?.size.width)!){
-                    node.position.x += (self.scene?.size.width)! * 3.4
-                }
-            }))
-            
-            self.enumerateChildNodes(withName: "background2", using: ({
-                (node, error) in
-                node.position.x -= 2
-
-                if node.position.x < -((self.scene?.size.width)!){
-                    node.position.x += (self.scene?.size.width)! * 5
-                }
-            }))
-
-        }
+    
 
 }
 
