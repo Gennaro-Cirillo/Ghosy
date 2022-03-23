@@ -11,6 +11,8 @@ import GameplayKit
 struct PhysicsCategories {
     static let fantasmino : UInt32 = 0x1 << 0
     static let pavimento : UInt32 = 0x1 << 1
+    static let ostacoloAlto : UInt32 = 0x1 << 2
+    static let ostacoloBasso : UInt32 = 0x1 << 3
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -19,27 +21,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var cont: Int = 0
     
+    var lastSpawnTime2:Date?
+    var lastSpawnTime:Date?
+    
     
 //    DICHIARAZIONI SPRITE
     
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
-    let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
+    let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     
     
     override func didMove(to view: SKView) {
         
+        backgroundColor = SKColor.white
+        
+//        ANIMAZIONE PERSONAGGIO
+        
+        personaggio.run(SKAction.repeatForever(SKAction.animate(with: [SKTexture(imageNamed: "walkFrame1") , SKTexture(imageNamed:"walkFrame2")], timePerFrame: 0.25)))
+
+
+        
+        ChiamataOstacoli()
+        
+        backgroundCreation()
+        moveBackground()
+        
 //        CARATTERIZZAZIONE DELLE SPRITE
         
 //        personaggio(aka fantasmino)
-        backgroundCreation()
-        groundCreation()
         
-        personaggio.position = CGPoint(x:400 , y:90)
+        personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
-        personaggio.xScale = size.width * 0.0002
-        personaggio.yScale = size.width * 0.0002
+        personaggio.xScale = 0.1
+        personaggio.yScale = 0.1
         personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
         personaggio.physicsBody?.restitution = 0
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
@@ -52,38 +68,60 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sky.alpha = 1
 //      terreno(aka pavimento)
         
-
+        terreno.position = CGPoint(x: size.width*0.5 ,y: 0)
+        terreno.xScale = 2
+        terreno.yScale = 0.7
+        terreno.name = "pavimento"
+        terreno.physicsBody = SKPhysicsBody(texture: terreno.texture!, size: terreno.size)
+//        terreno.physicsBody = SKPhysicsBody(rectangleOf: CGSize (width: UIScreen.main.bounds.size.width , height: 100))
+        terreno.physicsBody?.affectedByGravity = false
+        terreno.physicsBody?.allowsRotation = false
+        terreno.physicsBody?.restitution = 0
+        terreno.physicsBody?.isDynamic = false
+        terreno.physicsBody?.categoryBitMask = PhysicsCategories.pavimento
+        terreno.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+    
         
         
-        
-//      pilastri(aka ostacoli)
-        
-        pilastro1.position = CGPoint(x:700 , y:100)
-        pilastro1.xScale = 0.1
-        pilastro1.yScale = 0.1
-        
-        
-        backgroundColor = SKColor.white
         
        
 //        ADDCHILD
         
         addChild(personaggio)
-        addChild(pilastro1)
+        addChild(terreno)
         addChild(sky)
         self.scene?.physicsWorld.contactDelegate = self
     }
     
     
+    
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        moveBackground()
-        moveGround()
 
+        moveBackground()
     }
     
     
+    func ChiamataOstacoli(){
+        
+        var scelta: Int = Int.random(in: 1..<3)
+        
+        if(scelta==1){
+            ostacoloMedio()
+        }
+        if(scelta==2){
+            ostacoloAlto()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+4, execute: {
+            self.ChiamataOstacoli()
+        })
+        
+    }
+    
+    
+    
 //    FUNZIONE DI SALTO
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {
             return
@@ -93,6 +131,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 cont += 1
        }
     }
+
+    
+    
+//    FUNZIONE DI COLLISIONE
     
     func didBegin(_ contact: SKPhysicsContact) {
         
@@ -100,80 +142,171 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let contactB = contact.bodyB.node?.name
         
         if(contactA == "fantasmino" || contactB == "fantasmino"){
-                    
             if(contactA == "pavimento" || contactB == "pavimento"){
-                
                     cont = 0
-                
-//                    personaggio.position = CGPoint(x: personaggio.position.x - 10, y: personaggio.position.y)
-//                    personaggio.physicsBody?.applyImpulse(CGVector(dx: -10, dy: 0))
-                
             }
         }
-    }
-    func groundCreation(){
-        for i in 0...3{
-            let colliderTerreno = SKShapeNode(rectOf: CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-            let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
-            colliderTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i)) , y: self.frame.size.height * 0.1)
-            colliderTerreno.fillColor = .red
-            colliderTerreno.xScale = size.width * 0.005
-            colliderTerreno.yScale = size.width * 0.00025
-            colliderTerreno.alpha = 0.001
-            colliderTerreno.physicsBody = SKPhysicsBody(texture: terreno.texture!, size: terreno.size)
-            colliderTerreno.physicsBody = SKPhysicsBody(rectangleOf: CGSize (width: UIScreen.main.bounds.size.width , height: 100))
-            colliderTerreno.physicsBody?.affectedByGravity = false
-            colliderTerreno.physicsBody?.allowsRotation = false
-            colliderTerreno.physicsBody?.restitution = 0
-            colliderTerreno.physicsBody?.isDynamic = false
-            colliderTerreno.physicsBody?.categoryBitMask = PhysicsCategories.pavimento
-            colliderTerreno.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
-            colliderTerreno.zPosition = 0
-            terreno.name = "pavimento"
-            terreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i)) , y: self.frame.size.height * 0.1)
-            terreno.xScale = size.width * 0.00195
-            terreno.yScale = size.width * 0.0017
-            terreno.zPosition = 1
-            self.addChild(terreno)
-            self.addChild(colliderTerreno)
-        }
-    }
-    func moveGround(){
-        self.enumerateChildNodes(withName: "pavimento", using: ({
-            (node, error) in
-            node.position.x -= 2
-            
-            if node.position.x < -((self.scene?.size.width)!){
-                node.position.x += (self.scene?.size.width)! * 3
+        
+        if(contactA == "fantasmino" || contactB == "fantasmino"){
+            if(contactA == "ostacoloAlto" || contactB == "ostacoloAlto"){
+                
+                self.removeAllChildren()
+                
+                let schermataSconfitta = GameOver(size: self.size)
+                self.view?.presentScene(schermataSconfitta)
             }
-        }))
+        }
+        
+        if(contactA == "fantasmino" || contactB == "fantasmino"){
+            if(contactA == "ostacoloBasso" || contactB == "ostacoloBasso"){
+                
+                self.removeAllChildren()
+                
+                let schermataSconfitta = GameOver(size: self.size)
+                self.view?.presentScene(schermataSconfitta)
+            }
+        }
+        
+    }
+    
+    
+    
+//    GENERATORI DI OSTACOLI
+    
+    func ostacoloMedio(){
+        
+        let wait2 = SKAction.wait(forDuration: 2, withRange: 1)
+
+                let block2 = SKAction.run {[unowned self] in
+                    //Debug
+                    let now2 = Date()
+
+                    if let lastSpawnTime2 = self.lastSpawnTime {
+
+                        let elapsed2 = now2.timeIntervalSince(lastSpawnTime2)
+
+                        print("Sprite spawned after : \(elapsed2)")
+                    }
+                    self.lastSpawnTime = now2
+                    //End Debug
+
+                    let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
+                    pilastro1.position = CGPoint(x:1000 , y:90)
+                    pilastro1.xScale = 0.05
+                    pilastro1.yScale = 0.06
+                    pilastro1.name = "ostacoloAlto"
+                    
+                    pilastro1.physicsBody = SKPhysicsBody(texture: pilastro1.texture!, size: pilastro1.size)
+                    pilastro1.physicsBody?.affectedByGravity = true
+                    pilastro1.physicsBody?.allowsRotation = false
+                    pilastro1.physicsBody?.restitution = 0
+                    pilastro1.physicsBody?.categoryBitMask = PhysicsCategories.ostacoloAlto
+                    pilastro1.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+                    
+                    pilastro1.run(SKAction.moveTo(x: -40, duration: 5))
+                    
+                    
+                    self.addChild(pilastro1)
+                }
+
+                let sequence2 = SKAction.sequence([block2, wait2])
+                let loop2 = SKAction.repeat(sequence2, count: 1)
+
+                run(loop2, withKey: "bKey")
+        
+    }
+   
+    
+    
+    
+    func ostacoloAlto(){
+        
+        let wait = SKAction.wait(forDuration: 2, withRange: 1)
+
+                let block = SKAction.run {[unowned self] in
+                    //Debug
+                    let now = Date()
+
+                    if let lastSpawnTime = self.lastSpawnTime {
+
+                        let elapsed = now.timeIntervalSince(lastSpawnTime)
+
+                        print("Sprite spawned after : \(elapsed)")
+                    }
+                    self.lastSpawnTime = now
+                    //End Debug
+                    
+                    let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
+                    pilastro2.position = CGPoint(x:1000 , y:65)
+                    pilastro2.xScale = 0.05
+                    pilastro2.yScale = 0.06
+                    pilastro2.name = "ostacoloBasso"
+                    pilastro2.run(SKAction.moveTo(x: -40, duration: 5))
+                    
+                    pilastro2.physicsBody = SKPhysicsBody(texture: pilastro2.texture!, size: pilastro2.size)
+                    pilastro2.physicsBody?.affectedByGravity = true
+                    pilastro2.physicsBody?.allowsRotation = false
+                    pilastro2.physicsBody?.restitution = 0
+                    pilastro2.physicsBody?.categoryBitMask = PhysicsCategories.ostacoloBasso
+                    pilastro2.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+                    
+                    self.addChild(pilastro2)
+                }
+
+                let sequence = SKAction.sequence([block, wait])
+                let loop = SKAction.repeat(sequence, count: 1)
+
+                run(loop, withKey: "aKey")
+ 
     }
     
     func backgroundCreation(){
-        let backgroundTexture1 = SKTexture(imageNamed: "background1")
-       
+            let backgroundTexture1 = SKTexture(imageNamed: "background1")
+            let backgroundTexture2 = SKTexture(imageNamed: "background2")
+                    
+                for i in 0 ... 3 {
+                    let background1_1 = SKSpriteNode(texture: backgroundTexture1)
+                    background1_1.zPosition = -1
+                    background1_1.xScale = 1.2
+                    background1_1.yScale = 1.2
+                    background1_1.anchorPoint = CGPoint.zero
+                    background1_1.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: self.frame.size.height * 0.1)
+                    background1_1.name = "background1"
+                    self.addChild(background1_1)
+
+                    for i in 4...4{
+                        let background1_2 = SKSpriteNode(texture: backgroundTexture2)
+                        background1_2.zPosition = -1
+                        background1_2.xScale = 1.2
+                        background1_2.yScale = 1.2
+                        background1_2.anchorPoint = CGPoint.zero
+                        background1_2.name = "background2"
+                        background1_2.position = CGPoint(x: ((self.frame.size.width) * 0.69  * CGFloat(i)), y: self.frame.size.height * 0.1 )
+                        self.addChild(background1_2)
+                    }
+                }
+        }
+        
+        func moveBackground(){
+            self.enumerateChildNodes(withName: "background1", using: ({
+                (node, error) in
+                node.position.x -= 2
                 
-            for i in 0 ... 3 {
-                let background1_1 = SKSpriteNode(texture: backgroundTexture1)
-                background1_1.zPosition = -1
-                background1_1.xScale = size.width * 0.00135
-                background1_1.yScale = size.width * 0.00135
-                background1_1.alpha = 0.7
-                background1_1.anchorPoint = CGPoint.zero
-                background1_1.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: self.frame.size.height * 0.23)
-                background1_1.name = "background1"
-                self.addChild(background1_1)
-            }
-    }
-    
-    func moveBackground(){
-        self.enumerateChildNodes(withName: "background1", using: ({
-            (node, error) in
-            node.position.x -= 1
+                if node.position.x < -((self.scene?.size.width)!){
+                    node.position.x += (self.scene?.size.width)! * 3.4
+                }
+            }))
             
-            if node.position.x < -((self.scene?.size.width)!){
-                node.position.x += (self.scene?.size.width)! * 2.8
-            }
-        }))
-    }
+            self.enumerateChildNodes(withName: "background2", using: ({
+                (node, error) in
+                node.position.x -= 2
+
+                if node.position.x < -((self.scene?.size.width)!){
+                    node.position.x += (self.scene?.size.width)! * 5
+                }
+            }))
+
+        }
+
 }
+
