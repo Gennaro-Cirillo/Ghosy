@@ -59,7 +59,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundCreation()
         floorCreation()
         timer()
-
+        moon()
         
 //        CARATTERIZZAZIONE DELLE SPRITE
         
@@ -354,10 +354,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 for i in 0 ... 3 {
                     let esteticaTerreno = SKSpriteNode(texture: terrenoTexture)
-                    esteticaTerreno.xScale = size.width * 0.003
-                    esteticaTerreno.yScale = size.height * 0.004
+                    esteticaTerreno.xScale = size.width * 0.00158
+                    esteticaTerreno.yScale = size.height * 0.003
                     esteticaTerreno.zPosition = 10
-                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 45)
+                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 55)
                     esteticaTerreno.name = "estetica"
                     self.addChild(esteticaTerreno)
                 }
@@ -388,7 +388,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             run(.repeatForever(actions))
         }
     
+    func moon(){
+        let moon = SKTexture(imageNamed: "moon")
         
+        for i in 0 ... 3 {
+            let moon1 = SKSpriteNode(texture: moon)
+            moon1.zPosition = 8
+            moon1.xScale = size.width * 0.0005
+            moon1.yScale = size.width * 0.0005
+            moon1.alpha = 0.7
+            moon1.anchorPoint = CGPoint.zero
+            moon1.position = CGPoint(x: ((self.frame.size.width * self.frame.size.width) * 0.7  * CGFloat(i)) , y: self.frame.size.height * 0.35)
+            moon1.name = "background1"
+            self.addChild(moon1)
+    }
+    }
     
 }
 
