@@ -34,6 +34,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     let score: SKSpriteNode = SKSpriteNode(imageNamed: "score")
     let punteggio: SKLabelNode
+    let heartFill: SKSpriteNode = SKSpriteNode(imageNamed: "heartFill")
+    let heartFill2: SKSpriteNode = SKSpriteNode(imageNamed: "heartFill")
+    let heartFill3: SKSpriteNode = SKSpriteNode(imageNamed: "heartFill")
     
     override init(size: CGSize){
         punteggio = SKLabelNode(text: String(tempo))
@@ -93,7 +96,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         punteggio.fontName = "Menlo-Bold"
         punteggio.fontColor = .init(hue: 0.76, saturation: 0.12, brightness: 0.69, alpha: 1)
         
+        heartFill.position = CGPoint(x: size.width * 0.1  , y: size.height*0.88)
+        heartFill.zPosition = 11
+        heartFill.xScale = size.width * 0.0001
+        heartFill.yScale = size.height * 0.0002
         
+        heartFill2.position = CGPoint(x: size.width * 0.16  , y: size.height*0.88)
+        heartFill2.zPosition = 11
+        heartFill2.xScale = size.width * 0.0001
+        heartFill2.yScale = size.height * 0.0002
+        
+        heartFill3.position = CGPoint(x: size.width * 0.22  , y: size.height*0.88)
+        heartFill3.zPosition = 11
+        heartFill3.xScale = size.width * 0.0001
+        heartFill3.yScale = size.height * 0.0002
         
         sky.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
         sky.zPosition = -2
@@ -135,6 +151,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(personaggio)
         addChild(terreno)
         addChild(sky)
+        addChild(heartFill)
+        addChild(heartFill2)
+        addChild(heartFill3)
         
         self.scene?.physicsWorld.contactDelegate = self
     }
@@ -355,10 +374,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 for i in 0 ... 3 {
                     let esteticaTerreno = SKSpriteNode(texture: terrenoTexture)
-                    esteticaTerreno.xScale = size.width * 0.00158
-                    esteticaTerreno.yScale = size.height * 0.003
+                    esteticaTerreno.xScale = size.width * 0.002
+                    esteticaTerreno.yScale = size.height * 0.0025
                     esteticaTerreno.zPosition = 10
-                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 55)
+                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 25)
                     esteticaTerreno.name = "estetica"
                     self.addChild(esteticaTerreno)
                 }
@@ -417,17 +436,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func starsFlow(){
         let star = SKTexture(imageNamed: "starsFlow")
-        
         for i in 0 ... 3 {
             let star1 = SKSpriteNode(texture: star)
             star1.zPosition = 9
             star1.xScale = size.width * 0.0009
             star1.yScale = size.width * 0.0009
-            star1.alpha = 0.5
+            star1.alpha = 0.1
             star1.anchorPoint = CGPoint.zero
             star1.position = CGPoint(x: ((self.frame.size.width) * 0.6 * CGFloat(i)) , y: self.frame.size.height * 0.35)
             star1.name = "stars"
             self.addChild(star1)
+            
+            let twinkle1 = SKAction.fadeIn(withDuration: 5)
+            let twinkle2 = SKAction.fadeOut(withDuration: 5)
+            let loop = SKAction.sequence([twinkle1, twinkle2])
+            let repeatLoop = SKAction.repeatForever(loop)
+            star1.run(repeatLoop)
+            
     }
     }
     
