@@ -218,7 +218,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pilastro1.physicsBody?.categoryBitMask = PhysicsCategories.ostacoloAlto
                     pilastro1.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
                     
-                    pilastro1.run(SKAction.moveTo(x: -40, duration: 5))
+                    pilastro1.run(SKAction.moveTo(x: -80, duration: 5))
                     
                     
                     self.addChild(pilastro1)
@@ -257,7 +257,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pilastro2.yScale = frame.size.height * 0.009
                     pilastro2.name = "ostacoloBasso"
                     pilastro2.zPosition = 8
-                    pilastro2.run(SKAction.moveTo(x: -40, duration: 5))
+                    pilastro2.run(SKAction.moveTo(x: -80, duration: 5))
                     
                     pilastro2.physicsBody = SKPhysicsBody(texture: pilastro2.texture!, size: pilastro2.size)
                     pilastro2.physicsBody?.affectedByGravity = true
@@ -330,6 +330,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 node.position.x += (self.scene?.size.width)! * 2.4
             }
         }))
+    }
+    
+    func timer(){
+        
     }
 
 }
