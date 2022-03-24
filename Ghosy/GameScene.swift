@@ -20,6 +20,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //    VARIABILI UTILI
     
     var cont: Int = 0
+    var tempo: Int = 60
     
     var lastSpawnTime2:Date?
     var lastSpawnTime:Date?
@@ -31,6 +32,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
+    let score: SKSpriteNode = SKSpriteNode(imageNamed: "score")
+    let punteggio: SKLabelNode
+    
+    override init(size: CGSize){
+        punteggio = SKLabelNode(text: String(tempo))
+        super.init(size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     override func didMove(to view: SKView) {
@@ -46,7 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ChiamataOstacoli()
         backgroundCreation()
         floorCreation()
-        
+        timer()
 
         
 //        CARATTERIZZAZIONE DELLE SPRITE
@@ -55,13 +67,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
-        personaggio.xScale = size.width * 0.00015
-        personaggio.yScale = size.height * 0.00025
+        personaggio.xScale = size.width * 0.0002
+        personaggio.yScale = size.height * 0.0004
         personaggio.zPosition = 9
+        personaggio.physicsBody?.allowsRotation = false
+        personaggio.physicsBody?.affectedByGravity = false
         personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
         personaggio.physicsBody?.restitution = 0
+        personaggio.physicsBody?.friction = 0
+        personaggio.physicsBody?.angularDamping = 0
+        personaggio.physicsBody?.angularVelocity = 0
+        personaggio.physicsBody?.isResting = false
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
         personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
+        
+        score.position = CGPoint(x: size.width*0.77 , y: size.height*0.88)
+        score.zPosition = 11
+        score.xScale = size.width * 0.0003
+        score.yScale = size.height * 0.0005
+        
+        punteggio.position = CGPoint(x: size.width*0.9 , y: size.height*0.85)
+        punteggio.zPosition = 11
+        punteggio.fontSize = 35
+        punteggio.fontName = "Menlo-Bold"
+        punteggio.fontColor = .init(hue: 0.76, saturation: 0.12, brightness: 0.69, alpha: 1)
+        
+        
         
         sky.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
         sky.zPosition = -2
@@ -98,6 +129,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
        
 //        ADDCHILD
         
+        addChild(punteggio)
+        addChild(score)
         addChild(personaggio)
         addChild(terreno)
         addChild(sky)
@@ -111,7 +144,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         moveBackground()
         moveFloor()
-
+        
+        punteggio.text = String((-tempo+60)*10)
+        
+        
     }
     
     
@@ -126,7 +162,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ostacoloAlto()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now()+( CGFloat(tempo/15)+1.5), execute: {
             self.ChiamataOstacoli()
         })
         
@@ -141,7 +177,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
             if(cont <= 1){
-                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 90))
+                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
                 cont += 1
        }
     }
@@ -207,8 +243,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                     let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
                     pilastro1.position = CGPoint(x:1000 , y:80)
-                    pilastro1.xScale = frame.size.width * 0.0065
-                    pilastro1.yScale = frame.size.height * 0.01
+                    pilastro1.xScale = frame.size.width * 0.001625
+                    pilastro1.yScale = frame.size.height * 0.003
                     pilastro1.name = "ostacoloAlto"
                     pilastro1.zPosition = 8
                     
@@ -219,7 +255,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pilastro1.physicsBody?.categoryBitMask = PhysicsCategories.ostacoloAlto
                     pilastro1.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
                     
-                    pilastro1.run(SKAction.moveTo(x: -80, duration: 5))
+                    pilastro1.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2), completion: {
+                        pilastro1.removeFromParent()
+                    })
+                    
                     
                     
                     self.addChild(pilastro1)
@@ -254,11 +293,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
                     pilastro2.position = CGPoint(x:1000 , y:65)
-                    pilastro2.xScale = frame.size.width * 0.0065
-                    pilastro2.yScale = frame.size.height * 0.009
+                    pilastro2.xScale = frame.size.width * 0.001625
+                    pilastro2.yScale = frame.size.height * 0.003
                     pilastro2.name = "ostacoloBasso"
                     pilastro2.zPosition = 8
-                    pilastro2.run(SKAction.moveTo(x: -80, duration: 5))
+                    pilastro2.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2), completion: {
+                        pilastro2.removeFromParent()
+                    })
                     
                     pilastro2.physicsBody = SKPhysicsBody(texture: pilastro2.texture!, size: pilastro2.size)
                     pilastro2.physicsBody?.affectedByGravity = true
@@ -316,7 +357,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     esteticaTerreno.xScale = size.width * 0.003
                     esteticaTerreno.yScale = size.height * 0.004
                     esteticaTerreno.zPosition = 10
-                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 30)
+                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 45)
                     esteticaTerreno.name = "estetica"
                     self.addChild(esteticaTerreno)
                 }
@@ -334,8 +375,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func timer(){
+            let wait3 = SKAction.wait(forDuration: 1)
+            let go = SKAction.run({
+                if self.tempo > 0 {
+                    self.tempo -= 1
+                }else{
+    //                TODO
+                }
+            })
+            
+            let actions = SKAction.sequence([wait3, go])
+            run(.repeatForever(actions))
+        }
+    
         
-    }
-
+    
 }
 
