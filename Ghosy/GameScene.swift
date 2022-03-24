@@ -60,6 +60,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         floorCreation()
         timer()
         moon()
+        starsFlow()
         
 //        CARATTERIZZAZIONE DELLE SPRITE
         
@@ -146,7 +147,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         moveFloor()
         
         punteggio.text = String((-tempo+60)*10)
-        
+        starMove()
         
     }
     
@@ -401,6 +402,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             moon1.position = CGPoint(x: ((self.frame.size.width * self.frame.size.width) * 0.7  * CGFloat(i)) , y: self.frame.size.height * 0.35)
             moon1.name = "background1"
             self.addChild(moon1)
+    }
+    }
+    func starMove(){
+        self.enumerateChildNodes(withName: "stars", using: ({
+            (node, error) in
+            node.position.x -= 2
+            
+            if node.position.x < -((self.scene?.size.width)!){
+                node.position.x += (self.scene?.size.width)! * 3
+            }
+        }))
+    }
+    
+    func starsFlow(){
+        let star = SKTexture(imageNamed: "starsFlow")
+        
+        for i in 0 ... 3 {
+            let star1 = SKSpriteNode(texture: star)
+            star1.zPosition = 9
+            star1.xScale = size.width * 0.0009
+            star1.yScale = size.width * 0.0009
+            star1.alpha = 0.5
+            star1.anchorPoint = CGPoint.zero
+            star1.position = CGPoint(x: ((self.frame.size.width) * 0.6 * CGFloat(i)) , y: self.frame.size.height * 0.35)
+            star1.name = "stars"
+            self.addChild(star1)
     }
     }
     
