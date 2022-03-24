@@ -177,7 +177,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.removeAllChildren()
                 
                 let schermataSconfitta = GameOver(size: self.size)
-                self.view?.presentScene(schermataSconfitta)
+                let transition = SKTransition.fade(with: .black, duration: 10)
+                self.view?.presentScene(schermataSconfitta, transition: transition)
             }
         }
         
@@ -312,10 +313,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 for i in 0 ... 3 {
                     let esteticaTerreno = SKSpriteNode(texture: terrenoTexture)
-                    esteticaTerreno.xScale = size.width * 0.00135
-                    esteticaTerreno.yScale = size.height * 0.005
+                    esteticaTerreno.xScale = size.width * 0.003
+                    esteticaTerreno.yScale = size.height * 0.004
                     esteticaTerreno.zPosition = 10
-                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * 0.69  * CGFloat(i)) , y: 30)
+                    esteticaTerreno.position = CGPoint(x: (self.frame.size.width * CGFloat(i) + (self.frame.size.width * CGFloat(i))) * 0.5 , y: 30)
                     esteticaTerreno.name = "estetica"
                     self.addChild(esteticaTerreno)
                 }
