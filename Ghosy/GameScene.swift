@@ -13,6 +13,7 @@ struct PhysicsCategories {
     static let pavimento : UInt32 = 0x1 << 1
     static let ostacoloAlto : UInt32 = 0x1 << 2
     static let ostacoloBasso : UInt32 = 0x1 << 3
+    static let soldi : UInt32 = 0x1 << 4
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -21,9 +22,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var cont: Int = 0
     var tempo: Int = 60
+    var puntoMoneta: Int = 0
     
+    var lastSpawnTimeMoneta:Date?
     var lastSpawnTime2:Date?
     var lastSpawnTime:Date?
+    
     
     
 //    DICHIARAZIONI SPRITE
@@ -61,7 +65,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ChiamataOstacoli()
         backgroundCreation()
         floorCreation()
-     
+        
+        chiamataMonete()
+        
         timer()
         moon()
         starsFlow()
@@ -166,7 +172,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         moveBackground()
         moveFloor()
         vittoria()
-        punteggio.text = String((-tempo+60)*10)
+        punteggio.text = String(((-tempo+60)*10)+puntoMoneta)
         starMove()
         
     }
@@ -185,6 +191,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now()+( CGFloat(tempo/15)+1.5), execute: {
             self.ChiamataOstacoli()
+        })
+        
+    }
+
+    func chiamataMonete(){
+        moneta()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+10, execute: {
+            self.chiamataMonete()
         })
         
     }
@@ -238,6 +253,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.view?.presentScene(schermataSconfitta, transition: transition)
             }
         }
+        
+        if(contactA == "fantasmino" || contactB == "fantasmino"){
+            if(contactA == "soldi" || contactB == "soldi"){
+                
+                enumerateChildNodes(withName: "*"){node, _ in
+                    if (node.name == "soldi"){
+                        node.removeFromParent()
+                        self.puntoMoneta += 100
+                    }
+                    
+                }
+                
+            }
+        }
+
         
     }
     
@@ -467,6 +497,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             star1.run(repeatLoop)
             
     }
+    }
+    
+    func moneta(){
+        
+        let waitMoneta = SKAction.wait(forDuration: 10, withRange: 1)
+        
+        let blockMoneta = SKAction.run {[unowned self] in
+            //Debug
+            let nowMoneta = Date()
+
+            if let lastSpawnTimeMoneta = self.lastSpawnTime {
+
+                let elapsedMoneta = nowMoneta.timeIntervalSince(lastSpawnTimeMoneta)
+
+                print("Sprite spawned after : \(elapsedMoneta)")
+            }
+
+        
+        
+        let coin : SKSpriteNode = SKSpriteNode(imageNamed: "moneta")
+        coin.position = CGPoint(x:1000 , y:250)
+        coin.xScale = frame.size.width * 0.00065
+        coin.yScale = frame.size.height * 0.0015
+        coin.name = "soldi"
+        coin.zPosition = 8
+        coin.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2))
+        
+        coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
+        coin.physicsBody?.affectedByGravity = false
+        coin.physicsBody?.allowsRotation = true
+        coin.physicsBody?.angularVelocity = 5
+        coin.physicsBody?.angularDamping = 1.5
+        coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
+        coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+        
+            self.addChild(coin)
+        }
+        
+        let sequenceMoneta = SKAction.sequence([blockMoneta, waitMoneta])
+        let loopMoneta = SKAction.repeat(sequenceMoneta, count: 1)
+
+        run(loopMoneta, withKey: "cKey")
+        
     }
     
 }
