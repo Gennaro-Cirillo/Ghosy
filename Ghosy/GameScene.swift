@@ -151,9 +151,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(personaggio)
         addChild(terreno)
         addChild(sky)
-        addChild(heartFill)
-        addChild(heartFill2)
-        addChild(heartFill3)
+//        addChild(heartFill)
+//        addChild(heartFill2)
+//        addChild(heartFill3)
         
         self.scene?.physicsWorld.contactDelegate = self
     }
