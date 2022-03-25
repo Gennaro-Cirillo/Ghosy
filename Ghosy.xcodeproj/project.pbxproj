@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		52D58A1D27EC8AB800468209 /* play.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D58A1C27EC8AB800468209 /* play.swift */; };
+		A64583CA27ECD4BE00E4A239 /* Win.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64583C927ECD4BE00E4A239 /* Win.swift */; };
 		A6CDCEA227EA147900F757C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CDCEA127EA147900F757C5 /* AppDelegate.swift */; };
 		A6CDCEA427EA147900F757C5 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A6CDCEA327EA147900F757C5 /* GameScene.sks */; };
 		A6CDCEA627EA147900F757C5 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = A6CDCEA527EA147900F757C5 /* Actions.sks */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		52D58A1C27EC8AB800468209 /* play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = play.swift; sourceTree = "<group>"; };
+		A64583C927ECD4BE00E4A239 /* Win.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Win.swift; sourceTree = "<group>"; };
 		A6CDCE9E27EA147900F757C5 /* Ghosy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ghosy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6CDCEA127EA147900F757C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A6CDCEA327EA147900F757C5 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				A6CDCEA127EA147900F757C5 /* AppDelegate.swift */,
 				A6CDCEA327EA147900F757C5 /* GameScene.sks */,
 				A6CDCEA527EA147900F757C5 /* Actions.sks */,
+				A64583C927ECD4BE00E4A239 /* Win.swift */,
 				52D58A1C27EC8AB800468209 /* play.swift */,
 				A6CDCEA727EA147900F757C5 /* GameScene.swift */,
 				A6CDCED427EAAE2200F757C5 /* GameOver.swift */,
@@ -270,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A64583CA27ECD4BE00E4A239 /* Win.swift in Sources */,
 				A6CDCEA827EA147900F757C5 /* GameScene.swift in Sources */,
 				52D58A1D27EC8AB800468209 /* play.swift in Sources */,
 				A6CDCEAA27EA147900F757C5 /* GameViewController.swift in Sources */,

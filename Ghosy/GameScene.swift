@@ -58,6 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ChiamataOstacoli()
         backgroundCreation()
         floorCreation()
+        vittoria()
         timer()
 
         
@@ -74,10 +75,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         personaggio.physicsBody?.affectedByGravity = false
         personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
         personaggio.physicsBody?.restitution = 0
-        personaggio.physicsBody?.friction = 0
-        personaggio.physicsBody?.angularDamping = 0
-        personaggio.physicsBody?.angularVelocity = 0
+        personaggio.physicsBody?.friction = 999999999999999999
+        personaggio.physicsBody?.angularDamping = 999999999999999999
         personaggio.physicsBody?.isResting = false
+        personaggio.physicsBody?.linearDamping = 2.5
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
         personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
         
@@ -177,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
             if(cont <= 1){
-                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
+                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 120))
                 cont += 1
        }
     }
@@ -387,6 +388,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let actions = SKAction.sequence([wait3, go])
             run(.repeatForever(actions))
         }
+    
+    func vittoria (){
+        if tempo <= 0 {
+            self.removeAllChildren()
+            
+            let schermataVittoria = Win(size: self.size)
+            self.view?.presentScene(schermataVittoria)
+        }
+    }
     
         
     
