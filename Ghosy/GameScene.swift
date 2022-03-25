@@ -418,6 +418,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func moon(){
+        let moon = SKTexture(imageNamed: "moon")
         
         for i in 0 ... 3 {
             let moon1 = SKSpriteNode(texture: moon)
