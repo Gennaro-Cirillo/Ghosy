@@ -61,7 +61,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ChiamataOstacoli()
         backgroundCreation()
         floorCreation()
-        vittoria()
+     
         timer()
         moon()
         starsFlow()
@@ -165,7 +165,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         moveBackground()
         moveFloor()
-        
+        vittoria()
         punteggio.text = String((-tempo+60)*10)
         starMove()
         
