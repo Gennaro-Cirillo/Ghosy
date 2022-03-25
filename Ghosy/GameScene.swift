@@ -414,7 +414,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.removeAllChildren()
             
             let schermataVittoria = Win(size: self.size)
-            self.view?.presentScene(schermataVittoria)
+            let transition = SKTransition.fade(with: .black, duration: 10)
+            self.view?.presentScene(schermataVittoria, transition: transition)
+//            let schermataVittoria = Win(size: self.size)
+//            self.view?.presentScene(schermataVittoria)
         }
     }
     
