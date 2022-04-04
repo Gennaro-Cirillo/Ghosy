@@ -78,8 +78,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
         personaggio.name = "fantasmino"
-        personaggio.xScale = size.width * 0.0002
-        personaggio.yScale = size.height * 0.0004
+        personaggio.xScale = size.width * 0.004
+        personaggio.yScale = size.height * 0.006
         personaggio.zPosition = 9
         personaggio.physicsBody?.allowsRotation = false
         personaggio.physicsBody?.affectedByGravity = false
@@ -171,7 +171,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         moveBackground()
         moveFloor()
-        vittoria()
+//        vittoria()
         punteggio.text = String(((-tempo+60)*10)+puntoMoneta)
         starMove()
         
@@ -294,10 +294,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                     let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
                     pilastro1.position = CGPoint(x:1000 , y:80)
-                    pilastro1.xScale = frame.size.width * 0.001625
-                    pilastro1.yScale = frame.size.height * 0.003
+                    pilastro1.xScale = frame.size.width * 0.0025
+                    pilastro1.yScale = frame.size.height * 0.005
                     pilastro1.name = "ostacoloAlto"
                     pilastro1.zPosition = 8
+                    
+                    pilastro1.run(SKAction.repeatForever(SKAction.animate(with: [SKTexture(imageNamed: "obstacle1") , SKTexture(imageNamed:"obstacle1-1")], timePerFrame: 0.25)))
                     
                     pilastro1.physicsBody = SKPhysicsBody(texture: pilastro1.texture!, size: pilastro1.size)
                     pilastro1.physicsBody?.affectedByGravity = true
@@ -344,13 +346,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
                     pilastro2.position = CGPoint(x:1000 , y:65)
-                    pilastro2.xScale = frame.size.width * 0.001625
-                    pilastro2.yScale = frame.size.height * 0.003
+                    pilastro2.xScale = frame.size.width * 0.0025
+                    pilastro2.yScale = frame.size.height * 0.005
                     pilastro2.name = "ostacoloBasso"
                     pilastro2.zPosition = 8
                     pilastro2.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2), completion: {
                         pilastro2.removeFromParent()
                     })
+                    pilastro2.run(SKAction.repeatForever(SKAction.animate(with: [SKTexture(imageNamed: "obstacle2") , SKTexture(imageNamed:"obstacle2-1")], timePerFrame: 0.25)))
+
                     
                     pilastro2.physicsBody = SKPhysicsBody(texture: pilastro2.texture!, size: pilastro2.size)
                     pilastro2.physicsBody?.affectedByGravity = true
@@ -428,11 +432,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func timer(){
             let wait3 = SKAction.wait(forDuration: 1)
             let go = SKAction.run({
-                if self.tempo > 0 {
+//                if self.tempo > 0 {
                     self.tempo -= 1
-                }else{
-    //                TODO
-                }
+//                }else{
+//    //                TODO
+//                }
             })
             
             let actions = SKAction.sequence([wait3, go])
