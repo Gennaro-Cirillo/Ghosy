@@ -36,7 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
-    let score: SKSpriteNode = SKSpriteNode(imageNamed: "score")
+    let score: SKLabelNode
     let punteggio: SKLabelNode
     let heartFill: SKSpriteNode = SKSpriteNode(imageNamed: "heartFill")
     let heartFill2: SKSpriteNode = SKSpriteNode(imageNamed: "heartFill")
@@ -44,6 +44,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override init(size: CGSize){
         punteggio = SKLabelNode(text: String(tempo))
+        score = SKLabelNode(text: "SCORE")
         super.init(size: size)
     }
     
@@ -85,38 +86,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         personaggio.physicsBody?.affectedByGravity = false
         personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
         personaggio.physicsBody?.restitution = 0
-        personaggio.physicsBody?.friction = 999999999999999999
-        personaggio.physicsBody?.angularDamping = 999999999999999999
         personaggio.physicsBody?.isResting = false
         personaggio.physicsBody?.linearDamping = 2.5
         personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
         personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
         
-        score.position = CGPoint(x: size.width*0.77 , y: size.height*0.88)
+        score.position = CGPoint(x: size.width*0.79 , y: size.height*0.85)
         score.zPosition = 11
-        score.xScale = size.width * 0.0003
-        score.yScale = size.height * 0.0005
+        score.fontSize = 35
+        score.fontColor = .init(red: 0.698, green: 0.659, blue: 0.729, alpha: 1)
+        score.fontName = "Minecraft"
         
         punteggio.position = CGPoint(x: size.width*0.9 , y: size.height*0.85)
         punteggio.zPosition = 11
         punteggio.fontSize = 35
-        punteggio.fontName = "Menlo-Bold"
+        punteggio.fontName = "Minecraft"
         punteggio.fontColor = .init(hue: 0.76, saturation: 0.12, brightness: 0.69, alpha: 1)
-        
-        heartFill.position = CGPoint(x: size.width * 0.1  , y: size.height*0.88)
-        heartFill.zPosition = 11
-        heartFill.xScale = size.width * 0.0001
-        heartFill.yScale = size.height * 0.0002
-        
-        heartFill2.position = CGPoint(x: size.width * 0.16  , y: size.height*0.88)
-        heartFill2.zPosition = 11
-        heartFill2.xScale = size.width * 0.0001
-        heartFill2.yScale = size.height * 0.0002
-        
-        heartFill3.position = CGPoint(x: size.width * 0.22  , y: size.height*0.88)
-        heartFill3.zPosition = 11
-        heartFill3.xScale = size.width * 0.0001
-        heartFill3.yScale = size.height * 0.0002
         
         sky.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
         sky.zPosition = -2
@@ -506,7 +491,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func moneta(){
         
         let waitMoneta = SKAction.wait(forDuration: 10, withRange: 1)
-        
+      
         let blockMoneta = SKAction.run {[unowned self] in
             //Debug
             let nowMoneta = Date()

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5275FAD727FC876100A84B0C /* Minecraft.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5275FAD627FC876100A84B0C /* Minecraft.ttf */; };
+		5275FAD827FC876100A84B0C /* Minecraft.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5275FAD627FC876100A84B0C /* Minecraft.ttf */; };
+		5275FAD927FC876100A84B0C /* Minecraft.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5275FAD627FC876100A84B0C /* Minecraft.ttf */; };
 		52D58A1D27EC8AB800468209 /* play.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D58A1C27EC8AB800468209 /* play.swift */; };
 		A64583CA27ECD4BE00E4A239 /* Win.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64583C927ECD4BE00E4A239 /* Win.swift */; };
 		A6CDCEA227EA147900F757C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CDCEA127EA147900F757C5 /* AppDelegate.swift */; };
@@ -41,6 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5275FAD627FC876100A84B0C /* Minecraft.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Minecraft.ttf; sourceTree = "<group>"; };
+		5275FADA27FC87CA00A84B0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		52D58A1C27EC8AB800468209 /* play.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = play.swift; sourceTree = "<group>"; };
 		A64583C927ECD4BE00E4A239 /* Win.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Win.swift; sourceTree = "<group>"; };
 		A6CDCE9E27EA147900F757C5 /* Ghosy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ghosy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +113,7 @@
 		A6CDCEA027EA147900F757C5 /* Ghosy */ = {
 			isa = PBXGroup;
 			children = (
+				5275FADA27FC87CA00A84B0C /* Info.plist */,
 				A6CDCEA127EA147900F757C5 /* AppDelegate.swift */,
 				A6CDCEA327EA147900F757C5 /* GameScene.sks */,
 				A6CDCEA527EA147900F757C5 /* Actions.sks */,
@@ -136,6 +142,7 @@
 			children = (
 				A6CDCEC527EA147B00F757C5 /* GhosyUITests.swift */,
 				A6CDCEC727EA147B00F757C5 /* GhosyUITestsLaunchTests.swift */,
+				5275FAD627FC876100A84B0C /* Minecraft.ttf */,
 			);
 			path = GhosyUITests;
 			sourceTree = "<group>";
@@ -244,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5275FAD727FC876100A84B0C /* Minecraft.ttf in Resources */,
 				A6CDCEAD27EA147900F757C5 /* Main.storyboard in Resources */,
 				A6CDCEA427EA147900F757C5 /* GameScene.sks in Resources */,
 				A6CDCEAF27EA147B00F757C5 /* Assets.xcassets in Resources */,
@@ -256,6 +264,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5275FAD827FC876100A84B0C /* Minecraft.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5275FAD927FC876100A84B0C /* Minecraft.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +469,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8N8UMHC9XJ;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Ghosy/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -489,6 +500,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 8N8UMHC9XJ;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Ghosy/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
