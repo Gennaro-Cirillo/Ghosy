@@ -165,13 +165,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func ChiamataOstacoli(){
         
-        var scelta: Int = Int.random(in: 1..<3)
+        var scelta: Int = Int.random(in: 1..<4)
         
         if(scelta==1){
             ostacoloMedio()
         }
         if(scelta==2){
             ostacoloAlto()
+        }
+        if(scelta==3){
+            ostacoloBasso()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now()+( CGFloat(tempo/15)+1.5), execute: {
@@ -181,7 +184,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func chiamataMonete(){
-        moneta()
+        var scelta: Int = Int.random(in: 1..<5)
+        
+        if(scelta==1){
+            ossa1()        }
+        if(scelta==2){
+            ossa2()
+        }
+        if(scelta==3){
+            ossa3()
+        }
+        if(scelta==4){
+            ossa4()
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now()+10, execute: {
             self.chiamataMonete()
@@ -220,6 +235,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if(contactA == "fantasmino" || contactB == "fantasmino"){
             if(contactA == "ostacoloAlto" || contactB == "ostacoloAlto"){
+                
+                self.removeAllChildren()
+                
+                let schermataSconfitta = GameOver(size: self.size)
+                self.view?.presentScene(schermataSconfitta)
+            }
+        }
+        
+        if(contactA == "fantasmino" || contactB == "fantasmino"){
+            if(contactA == "ostacoloMedio" || contactB == "ostacoloMedio"){
                 
                 self.removeAllChildren()
                 
@@ -279,8 +304,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                     let pilastro1: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle1")
                     pilastro1.position = CGPoint(x:1000 , y:80)
-                    pilastro1.xScale = frame.size.width * 0.0025
-                    pilastro1.yScale = frame.size.height * 0.005
+                    pilastro1.xScale = frame.size.width * 0.003
+                    pilastro1.yScale = frame.size.height * 0.006
                     pilastro1.name = "ostacoloAlto"
                     pilastro1.zPosition = 8
                     
@@ -331,8 +356,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     let pilastro2: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle2")
                     pilastro2.position = CGPoint(x:1000 , y:65)
-                    pilastro2.xScale = frame.size.width * 0.0025
-                    pilastro2.yScale = frame.size.height * 0.005
+                    pilastro2.xScale = frame.size.width * 0.003
+                    pilastro2.yScale = frame.size.height * 0.006
                     pilastro2.name = "ostacoloBasso"
                     pilastro2.zPosition = 8
                     pilastro2.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2), completion: {
@@ -352,6 +377,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
 
                 let sequence = SKAction.sequence([block, wait])
+                let loop = SKAction.repeat(sequence, count: 1)
+
+                run(loop, withKey: "aKey")
+ 
+    }
+    
+    func ostacoloBasso(){
+        
+        let wait3 = SKAction.wait(forDuration: 2, withRange: 1)
+
+                let block = SKAction.run {[unowned self] in
+                    //Debug
+                    let now = Date()
+
+                    if let lastSpawnTime = self.lastSpawnTime {
+
+                        let elapsed = now.timeIntervalSince(lastSpawnTime)
+
+                        print("Sprite spawned after : \(elapsed)")
+                    }
+                    self.lastSpawnTime = now
+                    //End Debug
+                    
+                    let pilastro3: SKSpriteNode = SKSpriteNode(imageNamed: "obstacle3.png")
+                    pilastro3.position = CGPoint(x:1000 , y:65)
+                    pilastro3.xScale = frame.size.width * 0.003
+                    pilastro3.yScale = frame.size.height * 0.006
+                    pilastro3.name = "ostacoloMedio"
+                    pilastro3.zPosition = 8
+                    pilastro3.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2), completion: {
+                        pilastro3.removeFromParent()
+                    })
+                    pilastro3.physicsBody = SKPhysicsBody(texture: pilastro3.texture!, size: pilastro3.size)
+                    pilastro3.physicsBody?.affectedByGravity = true
+                    pilastro3.physicsBody?.allowsRotation = false
+                    pilastro3.physicsBody?.restitution = 0
+                    pilastro3.physicsBody?.categoryBitMask = PhysicsCategories.ostacoloBasso
+                    pilastro3.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+                    
+                    self.addChild(pilastro3)
+                }
+
+                let sequence = SKAction.sequence([block, wait3])
                 let loop = SKAction.repeat(sequence, count: 1)
 
                 run(loop, withKey: "aKey")
@@ -488,7 +556,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     }
     
-    func moneta(){
+    func ossa1(){
         
         let waitMoneta = SKAction.wait(forDuration: 10, withRange: 1)
       
@@ -505,10 +573,139 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         
         
-        let coin : SKSpriteNode = SKSpriteNode(imageNamed: "moneta")
+        let coin : SKSpriteNode = SKSpriteNode(imageNamed: "bone1.png")
         coin.position = CGPoint(x:1000 , y:250)
-        coin.xScale = frame.size.width * 0.00065
-        coin.yScale = frame.size.height * 0.0015
+        coin.xScale = frame.size.width * 0.002
+        coin.yScale = frame.size.height * 0.004
+        coin.name = "soldi"
+        coin.zPosition = 8
+        coin.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2))
+        
+        coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
+        coin.physicsBody?.affectedByGravity = false
+        coin.physicsBody?.allowsRotation = true
+        coin.physicsBody?.angularVelocity = 5
+        coin.physicsBody?.angularDamping = 1.5
+        coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
+        coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+        
+            self.addChild(coin)
+        }
+        
+        let sequenceMoneta = SKAction.sequence([blockMoneta, waitMoneta])
+        let loopMoneta = SKAction.repeat(sequenceMoneta, count: 1)
+
+        run(loopMoneta, withKey: "cKey")
+        
+    }
+    
+    func ossa2(){
+        
+        let waitMoneta = SKAction.wait(forDuration: 10, withRange: 1)
+      
+        let blockMoneta = SKAction.run {[unowned self] in
+            //Debug
+            let nowMoneta = Date()
+
+            if let lastSpawnTimeMoneta = self.lastSpawnTime {
+
+                let elapsedMoneta = nowMoneta.timeIntervalSince(lastSpawnTimeMoneta)
+
+                print("Sprite spawned after : \(elapsedMoneta)")
+            }
+
+        
+        
+        let coin : SKSpriteNode = SKSpriteNode(imageNamed: "bone2.png")
+            coin.position = CGPoint(x: 1000 , y: 250)
+        coin.xScale = frame.size.width * 0.002
+        coin.yScale = frame.size.height * 0.004
+        coin.name = "soldi"
+        coin.zPosition = 8
+        coin.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2))
+        
+        coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
+        coin.physicsBody?.affectedByGravity = false
+        coin.physicsBody?.allowsRotation = true
+        coin.physicsBody?.angularVelocity = 5
+        coin.physicsBody?.angularDamping = 1.5
+        coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
+        coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+        
+            self.addChild(coin)
+        }
+        
+        let sequenceMoneta = SKAction.sequence([blockMoneta, waitMoneta])
+        let loopMoneta = SKAction.repeat(sequenceMoneta, count: 1)
+
+        run(loopMoneta, withKey: "cKey")
+        
+    }
+    
+    func ossa3(){
+        
+        let waitMoneta = SKAction.wait(forDuration: 10, withRange: 1)
+      
+        let blockMoneta = SKAction.run {[unowned self] in
+            //Debug
+            let nowMoneta = Date()
+
+            if let lastSpawnTimeMoneta = self.lastSpawnTime {
+
+                let elapsedMoneta = nowMoneta.timeIntervalSince(lastSpawnTimeMoneta)
+
+                print("Sprite spawned after : \(elapsedMoneta)")
+            }
+
+        
+        
+        let coin : SKSpriteNode = SKSpriteNode(imageNamed: "bone3.png")
+        coin.position = CGPoint(x:1000 , y:250)
+        coin.xScale = frame.size.width * 0.002
+        coin.yScale = frame.size.height * 0.004
+        coin.name = "soldi"
+        coin.zPosition = 8
+        coin.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2))
+        
+        coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
+        coin.physicsBody?.affectedByGravity = false
+        coin.physicsBody?.allowsRotation = true
+        coin.physicsBody?.angularVelocity = 5
+        coin.physicsBody?.angularDamping = 1.5
+        coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
+        coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
+        
+            self.addChild(coin)
+        }
+        
+        let sequenceMoneta = SKAction.sequence([blockMoneta, waitMoneta])
+        let loopMoneta = SKAction.repeat(sequenceMoneta, count: 1)
+
+        run(loopMoneta, withKey: "cKey")
+        
+    }
+    
+    func ossa4(){
+        
+        let waitMoneta = SKAction.wait(forDuration: 10, withRange: 1)
+      
+        let blockMoneta = SKAction.run {[unowned self] in
+            //Debug
+            let nowMoneta = Date()
+
+            if let lastSpawnTimeMoneta = self.lastSpawnTime {
+
+                let elapsedMoneta = nowMoneta.timeIntervalSince(lastSpawnTimeMoneta)
+
+                print("Sprite spawned after : \(elapsedMoneta)")
+            }
+
+        
+        
+        let coin : SKSpriteNode = SKSpriteNode(imageNamed: "bone4.png")
+        coin.position = CGPoint(x:1000 , y:250)
+        coin.xScale = frame.size.width * 0.002
+        coin.yScale = frame.size.height * 0.004
         coin.name = "soldi"
         coin.zPosition = 8
         coin.run(SKAction.moveTo(x: -80, duration: Double(tempo)*0.06+2))
