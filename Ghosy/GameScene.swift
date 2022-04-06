@@ -18,12 +18,15 @@ struct PhysicsCategories {
     static let none: UInt32 = 1<<8
 }
 
+var globalScore: Int = 0
+
+var tempo: Int = 60
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
 //    VARIABILI UTILI
     
     var cont: Int = 0
-    var tempo: Int = 60
     var puntoMoneta: Int = 0
     
     var lastSpawnTimeMoneta:Date?
@@ -36,7 +39,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
-    let collider : SKShapeNode = SKShapeNode(rectOf: CGSize(width: 80, height: 60))
+    let collider : SKShapeNode = SKShapeNode(rectOf: CGSize(width: 80, height: 70))
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     let score: SKLabelNode
@@ -84,7 +87,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         collider.zPosition = 10
         collider.fillColor = .blue
         collider.name = "fantasmino"
-        collider.alpha = 0.1
+        collider.alpha = 0.001
         collider.physicsBody?.allowsRotation = false
         collider.physicsBody?.affectedByGravity = false
         collider.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 80))
@@ -98,8 +101,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
 //        personaggio.name = "fantasmino"
-        personaggio.xScale = size.width * 0.004
-        personaggio.yScale = size.height * 0.006
+        personaggio.xScale = size.width * 0.0035
+        personaggio.yScale = size.height * 0.008
         personaggio.zPosition = 9
 //        personaggio.physicsBody?.allowsRotation = false
 //        personaggio.physicsBody?.affectedByGravity = false
@@ -174,8 +177,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         
-        personaggio.position.y = collider.position.y + 10
-        personaggio.position.x = collider.position.x - 15
+        personaggio.position.y = collider.position.y + 20
+        personaggio.position.x = collider.position.x - 10
         moveBackground()
         moveFloor()
 //        vittoria()
@@ -235,7 +238,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
             if(cont <= 1){
-                collider.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 120))
+                collider.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 125))
                 cont += 1
        }
     }
@@ -259,6 +262,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(contactA == "ostacoloAlto" || contactB == "ostacoloAlto"){
                 
                 self.removeAllChildren()
+                let myScore = ((-tempo+60)*10)+puntoMoneta
+                
+                globalScore = myScore
+                
+                print(globalScore)
                 
                 let schermataSconfitta = GameOver(size: self.size)
                 self.view?.presentScene(schermataSconfitta)
@@ -269,6 +277,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(contactA == "ostacoloMedio" || contactB == "ostacoloMedio"){
                 
                 self.removeAllChildren()
+                let myScore = ((-tempo+60)*10)+puntoMoneta
+                
+                globalScore = myScore
+                
+                print(globalScore)
                 
                 let schermataSconfitta = GameOver(size: self.size)
                 self.view?.presentScene(schermataSconfitta)
@@ -279,6 +292,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(contactA == "ostacoloBasso" || contactB == "ostacoloBasso"){
                 
                 self.removeAllChildren()
+                let myScore = ((-tempo+60)*10)+puntoMoneta
+                
+                globalScore = myScore
+                
+                print(globalScore)
                 
                 let schermataSconfitta = GameOver(size: self.size)
                 let transition = SKTransition.fade(with: .black, duration: 10)
@@ -508,7 +526,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let wait3 = SKAction.wait(forDuration: 1)
             let go = SKAction.run({
 //                if self.tempo > 0 {
-                    self.tempo -= 1
+                    tempo -= 1
 //                }else{
 //    //                TODO
 //                }

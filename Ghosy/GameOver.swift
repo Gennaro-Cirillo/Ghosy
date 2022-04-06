@@ -15,6 +15,8 @@ class GameOver : SKScene{
     let tapToPlay = SKLabelNode(text: "Tap to play")
     
     override func didMove(to view: SKView) {
+        bestScore.text = "BEST SCORE: \(globalScore)"
+        
         let backgroundGradiente: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
         backgroundGradiente.position = CGPoint(x: self.frame.size.width * 0.5 , y: self.frame.size.height * 0.5)
         backgroundGradiente.xScale = size.width
@@ -36,6 +38,8 @@ class GameOver : SKScene{
         star1.zPosition = 0
         addChild(star)
         addChild(star1)
+        
+        
   
         gameOver.position = CGPoint (x: frame.size.width/2, y: frame.size.height/2.5)
         gameOver.fontSize = 35
