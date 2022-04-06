@@ -14,6 +14,8 @@ struct PhysicsCategories {
     static let ostacoloAlto : UInt32 = 0x1 << 2
     static let ostacoloBasso : UInt32 = 0x1 << 3
     static let soldi : UInt32 = 0x1 << 4
+    
+    static let none: UInt32 = 1<<8
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -34,6 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     let personaggio: SKSpriteNode = SKSpriteNode(imageNamed: "walkFrame1")
+    let collider : SKShapeNode = SKShapeNode(rectOf: CGSize(width: 80, height: 60))
     let terreno: SKSpriteNode = SKSpriteNode(imageNamed: "base")
     let sky: SKSpriteNode = SKSpriteNode(imageNamed: "skyColor")
     let score: SKLabelNode
@@ -76,20 +79,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        CARATTERIZZAZIONE DELLE SPRITE
         
 //        personaggio(aka fantasmino)
+        collider.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
+
+        collider.zPosition = 10
+        collider.fillColor = .blue
+        collider.name = "fantasmino"
+        collider.alpha = 0.1
+        collider.physicsBody?.allowsRotation = false
+        collider.physicsBody?.affectedByGravity = false
+        collider.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 80))
+        collider.physicsBody?.restitution = 0
+        collider.physicsBody?.isResting = false
+        collider.physicsBody?.linearDamping = 2.5
+        collider.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
+        collider.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
+        collider.physicsBody?.collisionBitMask = PhysicsCategories.pavimento
+        
         
         personaggio.position = CGPoint(x: size.width*0.1 , y: size.height * 0.2)
-        personaggio.name = "fantasmino"
+//        personaggio.name = "fantasmino"
         personaggio.xScale = size.width * 0.004
         personaggio.yScale = size.height * 0.006
         personaggio.zPosition = 9
-        personaggio.physicsBody?.allowsRotation = false
-        personaggio.physicsBody?.affectedByGravity = false
-        personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
-        personaggio.physicsBody?.restitution = 0
-        personaggio.physicsBody?.isResting = false
-        personaggio.physicsBody?.linearDamping = 2.5
-        personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
-        personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
+//        personaggio.physicsBody?.allowsRotation = false
+//        personaggio.physicsBody?.affectedByGravity = false
+//        personaggio.physicsBody = SKPhysicsBody(texture: personaggio.texture!, size: personaggio.size)
+//        personaggio.physicsBody?.restitution = 0
+//        personaggio.physicsBody?.isResting = false
+//        personaggio.physicsBody?.linearDamping = 2.5
+//        personaggio.physicsBody?.categoryBitMask = PhysicsCategories.fantasmino
+//        personaggio.physicsBody?.contactTestBitMask = PhysicsCategories.pavimento
         
         score.position = CGPoint(x: size.width*0.79 , y: size.height*0.85)
         score.zPosition = 11
@@ -142,6 +161,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(score)
         addChild(personaggio)
         addChild(terreno)
+        addChild(collider)
         addChild(sky)
 //        addChild(heartFill)
 //        addChild(heartFill2)
@@ -154,6 +174,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         
+        personaggio.position.y = collider.position.y + 10
+        personaggio.position.x = collider.position.x - 15
         moveBackground()
         moveFloor()
 //        vittoria()
@@ -213,7 +235,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
             if(cont <= 1){
-                personaggio.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 120))
+                collider.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 120))
                 cont += 1
        }
     }
@@ -583,9 +605,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
         coin.physicsBody?.affectedByGravity = false
-        coin.physicsBody?.allowsRotation = true
-        coin.physicsBody?.angularVelocity = 5
-        coin.physicsBody?.angularDamping = 1.5
+//        coin.physicsBody?.allowsRotation = true
+//        coin.physicsBody?.angularVelocity = 5
+//        coin.physicsBody?.angularDamping = 1.5
         coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
         coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
         
@@ -626,9 +648,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
         coin.physicsBody?.affectedByGravity = false
-        coin.physicsBody?.allowsRotation = true
-        coin.physicsBody?.angularVelocity = 5
-        coin.physicsBody?.angularDamping = 1.5
+//        coin.physicsBody?.allowsRotation = true
+//        coin.physicsBody?.angularVelocity = 5
+//        coin.physicsBody?.angularDamping = 1.5
         coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
         coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
         
@@ -669,9 +691,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
         coin.physicsBody?.affectedByGravity = false
-        coin.physicsBody?.allowsRotation = true
-        coin.physicsBody?.angularVelocity = 5
-        coin.physicsBody?.angularDamping = 1.5
+//        coin.physicsBody?.allowsRotation = true
+//        coin.physicsBody?.angularVelocity = 5
+//        coin.physicsBody?.angularDamping = 1.5
         coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
         coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
         
@@ -712,9 +734,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         coin.physicsBody = SKPhysicsBody(texture: coin.texture!, size: coin.size)
         coin.physicsBody?.affectedByGravity = false
-        coin.physicsBody?.allowsRotation = true
-        coin.physicsBody?.angularVelocity = 5
-        coin.physicsBody?.angularDamping = 1.5
+//        coin.physicsBody?.allowsRotation = true
+//        coin.physicsBody?.angularVelocity = 5
+//        coin.physicsBody?.angularDamping = 1.5
         coin.physicsBody?.categoryBitMask = PhysicsCategories.soldi
         coin.physicsBody?.contactTestBitMask = PhysicsCategories.fantasmino
         
